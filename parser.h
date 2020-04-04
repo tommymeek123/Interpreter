@@ -3,8 +3,8 @@
 /**
  * Function prototypes for parser.c
  *
- * @author William Kreahling
  * @author Mark Holliday
+ * @author William Kreahling
  * created on 2008-09-26
  * modified on 2015-03-25
  */
