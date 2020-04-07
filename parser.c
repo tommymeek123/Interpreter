@@ -4,8 +4,11 @@
  *
  * @author Mark Holliday
  * @author William Kreahling
+ * @author Justin Clifton
+ * @author Tommy Meek
  * created on 2008-09-26
  * modified on 2015-03-25
+ * modified on 2020-04-13
  */
 
 #include <stdio.h>
@@ -17,24 +20,31 @@
 #include "parser.h"
 
 /*
- * <bexpr> ::= <expr> ;
- * <expr> ::=  <term> <ttail>
- * <ttail> ::=  <add_sub_tok> <term> <ttail> | e
- * <term> ::=  <stmt> <stail>
- * <stail> ::=  <mult_div_tok> <stmt> <stail> | e
- * <stmt> ::=  <factor> <ftail>
- * <ftail> ::=  <compare_tok> <factor> <ftail> | e
- * <factor> ::=  <expp> ^ <factor> | <expp>
- * <expp> ::=  ( <expr> ) | <num>
- * <add_sub_tok> ::=  + | -
- * <mul_div_tok> ::=  * | /
- * <compare_tok> ::=  < | > | <= | >= | ! = | ==
- * <num> ::=  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
+ * <bexpr>       ->  <expr> ;
+ * <expr>        ->  <term> <ttail>
+ * <ttail>       ->  <add_sub_tok> <term> <ttail> | e
+ * <term>        ->  <stmt> <stail>
+ * <stail>       ->  <mult_div_tok> <stmt> <stail> | e
+ * <stmt>        ->  <factor> <ftail>
+ * <ftail>       ->  <compare_tok> <factor> <ftail> | e
+ * <factor>      ->  <expp> ^ <factor> | <expp>
+ * <expp>        ->  ( <expr> ) | <num>
+ * <add_sub_tok> ->  + | -
+ * <mul_div_tok> ->  * | /
+ * <compare_tok> ->  < | > | <= | >= | != | ==
+ * <num>         ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
  */
 
+/* Global variables */
+extern char * line;
 
-// <expr> -> <term> <ttail>
-int expr(char *token) {
+/**
+ * <expr> -> <term> <ttail> TODO: DESCRIPTION.
+ *
+ * @param token TODO: DESCRIPTION.
+ * @return TODO: DESCRIPTION.
+ */
+int expr(char * token) {
    int subtotal = term(token);
    if (subtotal == ERROR) {
       return subtotal;
@@ -43,8 +53,14 @@ int expr(char *token) {
    }
 }
 
-// <ttail> -> <add_sub_tok> <term> <ttail> | e
-int ttail(char *token, int subtotal) {
+/**
+ * <ttail> -> <add_sub_tok> <term> <ttail> | e TODO: DESCRIPTION.
+ *
+ * @param token TODO: DESCRIPTION.
+ * @param subtotal TODO: DESCRIPTION.
+ * @return TODO: DESCRIPTION.
+ */
+int ttail(char * token, int subtotal) {
    int term_value;
 
    if (!strncmp(token, "+", 1)) {

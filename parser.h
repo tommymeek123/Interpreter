@@ -1,14 +1,24 @@
-#ifndef PARSER_H
-   #define PARSER_H
 /**
- * Function prototypes for parser.c
+ * Header file for parser.c. Named constant definitions and 
+ * funtion prototypes are included.
  *
  * @author Mark Holliday
  * @author William Kreahling
+ * @author Justin Clifton
+ * @author Tommy Meek
  * created on 2008-09-26
  * modified on 2015-03-25
+ * modified on 2020-04-13
  */
 
+#ifndef PARSER_H
+   #define PARSER_H
+
+/* Constants */
+#define SYN_ERR -999999
+#define LEX_ERR -999998
+
+/* Function prototypes */
 int bexpr(char *);           // bexpr is short for boolean_expression
 int expr(char *);            // expr is short for expression
 int term(char *);
