@@ -39,7 +39,22 @@
 extern char * line;
 
 /**
- * <expr> -> <term> <ttail> TODO: DESCRIPTION.
+ * <bexpr>  ->  <expr> ; TODO: DESCRIPTION.
+ *
+ * @param token TODO: DESCRIPTION.
+ * @return TODO: DESCRIPTION.
+ */
+int bexpr(char * token) {
+   int subtotal = expr(token);
+   get_token(token);
+   if (token != ';') {
+      subtotal = ERROR;
+   }
+   return subtotal;
+}
+
+/**
+ * <expr>  ->  <term> <ttail> TODO: DESCRIPTION.
  *
  * @param token TODO: DESCRIPTION.
  * @return TODO: DESCRIPTION.
@@ -54,7 +69,7 @@ int expr(char * token) {
 }
 
 /**
- * <ttail> -> <add_sub_tok> <term> <ttail> | e TODO: DESCRIPTION.
+ * <ttail>  ->  <add_sub_tok> <term> <ttail> | e TODO: DESCRIPTION.
  *
  * @param token TODO: DESCRIPTION.
  * @param subtotal TODO: DESCRIPTION.
@@ -89,12 +104,42 @@ int ttail(char * token, int subtotal) {
    }
 
    /**
-    * * <add_sub_tok> ->  + | -
-    * TODO: DESCRIPTION.
+    * <add_sub_tok>  ->  + | - TODO: DESCRIPTION.
+    *
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   int add_sub_tok(char * token, int subtotal){
+   void add_sub_tok(char * token){
+      get_token(token);
+   }
+
+   /**
+    * <mul_div_tok>  ->  * | / TODO: DESCRIPTION.
+    *
+    * @param TODO: DESCRIPTION
+    * @param TODO: DESCRIPTION
+    */
+   void mul_div_tok(char * token){
+      get_token(token);
+   }
+
+   /**
+    * <compare_tok>  ->  < | > | <= | >= | != | == TODO: DESCRIPTION.
+    *
+    * @param TODO: DESCRIPTION
+    * @param TODO: DESCRIPTION
+    */
+   void compare_tok(char * token){
+      get_token(token);
+   }
+
+   /**
+    * <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+ TODO: DESCRIPTION.
+    *
+    * @param TODO: DESCRIPTION
+    * @param TODO: DESCRIPTION
+    */
+   void num(char * token){
       get_token(token);
    }
 }

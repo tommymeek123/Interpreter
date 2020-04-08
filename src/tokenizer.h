@@ -14,6 +14,7 @@
 #define FALSE 0
 #define DASHES "---------------------------------------------------------\n"
 #define ERROR "Lexical error: not a lexeme\n"
+#define INVALID_LEXEME '@'
 
 /* Function prototypes */
 void get_token(char *);
