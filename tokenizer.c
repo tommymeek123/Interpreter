@@ -16,7 +16,7 @@
 #include "tokenizer.h"
 
 /* Global variables */
-char * line;                 // pointer to the next character to process
+extern char * line;
 
 /**
  * Main function. Most of the program logic is in main. File pointers are 
@@ -37,7 +37,7 @@ int main(int argc, char * argv[]) {
        count;                // count of tokens on current statement
 
    if (argc != 3) {
-      printf("Usage: tokenizer inputFile outputFile\n");
+      printf("Usage: interpreter <input_filename> <output_filename>\n");
       exit(1);
    }
 

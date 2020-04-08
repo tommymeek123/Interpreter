@@ -87,4 +87,14 @@ int ttail(char * token, int subtotal) {
       // empty string
       return subtotal;
    }
+
+   /**
+    * * <add_sub_tok> ->  + | -
+    * TODO: DESCRIPTION.
+    * @param TODO: DESCRIPTION
+    * @param TODO: DESCRIPTION
+    */
+   int add_sub_tok(char * token, int subtotal){
+      get_token(token);
+   }
 }
