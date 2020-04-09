@@ -16,8 +16,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <math.h>
-#include "tokenizer.h"
-#include "parser.h"
+#include "interpreter.h"
 
 /*
  * <bexpr>       ->  <expr> ;
@@ -109,7 +108,7 @@ int ttail(char * token, int subtotal) {
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void add_sub_tok(char * token){
+   void add_sub_tok(char * token) {
       get_token(token);
    }
 
@@ -119,7 +118,7 @@ int ttail(char * token, int subtotal) {
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void mul_div_tok(char * token){
+   void mul_div_tok(char * token) {
       get_token(token);
    }
 
@@ -129,7 +128,7 @@ int ttail(char * token, int subtotal) {
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void compare_tok(char * token){
+   void compare_tok(char * token) {
       get_token(token);
    }
 
@@ -139,7 +138,7 @@ int ttail(char * token, int subtotal) {
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void num(char * token){
+   void num(char * token) {
       get_token(token);
    }
 }

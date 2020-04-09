@@ -21,8 +21,8 @@
 void get_token(char *);
 void bypass_whitespace();
 int isvalid(char, FILE *);
-void check_for_equals(char **);   // Not used
-void append_digits(char **);      // Not used
+// void check_for_equals(char **);   // Not used
+// void append_digits(char **);      // Not used
 
 // interpreter.c
 void usage(int);
@@ -47,4 +47,3 @@ void tokenize(FILE *, FILE *);
 //void expon_tok(char *);      // helper function
 //int num(char *);
 //int is_number(char *);       // helper function
-

@@ -23,6 +23,7 @@ extern char * line;          // pointer to the next character to process
  * @param token_ptr A pointer to a memory location used to store a lexeme.
  */
 void get_token(char * token_ptr) {
+   bypass_whitespace();
    *token_ptr = *line;
    line++;
    switch (*token_ptr) {
@@ -59,6 +60,7 @@ void get_token(char * token_ptr) {
    }
    token_ptr++;
    *token_ptr = '\0';
+   bypass_whitespace();
 }
 
 /**
@@ -90,29 +92,29 @@ int isvalid(char token, FILE * out_file) {
    return result;
 }
 
-/**
- * This function checks if the next character in line is an equals symbol. 
- * If it is, it is appended to the token array. If not, nothing happens.
- *
- * @param token_ptr A pointer to a memory location used to store a lexeme.
- */
-void check_for_equals(char ** token_ptr) {
-   if (*line == '=') {
-      *token_ptr++;
-      line++;
-      **token_ptr = '=';
-   }
-}
+// /**
+//  * This function checks if the next character in line is an equals symbol. 
+//  * If it is, it is appended to the token array. If not, nothing happens.
+//  *
+//  * @param token_ptr A pointer to a memory location used to store a lexeme.
+//  */
+// void check_for_equals(char ** token_ptr) {
+//    if (*line == '=') {
+//       *token_ptr++;
+//       line++;
+//       **token_ptr = '=';
+//    }
+// }
 
-/**
- * Appends digits to the lexeme until a non-numeric character is found.
- *
- * @param token_ptr A pointer to a memory location used to store a lexeme.
- */
-void append_digits(char ** token_ptr) {
-   while (isdigit(*line)) {
-      *token_ptr++;
-      **token_ptr = *line;
-      line++;
-   }
-}
+// /**
+//  * Appends digits to the lexeme until a non-numeric character is found.
+//  *
+//  * @param token_ptr A pointer to a memory location used to store a lexeme.
+//  */
+// void append_digits(char ** token_ptr) {
+//    while (isdigit(*line)) {
+//       *token_ptr++;
+//       **token_ptr = *line;
+//       line++;
+//    }
+// }

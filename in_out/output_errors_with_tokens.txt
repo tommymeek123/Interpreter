@@ -1,0 +1,51 @@
+Statement #1
+Lexeme 0 is 1 and is an INT_LITERAL
+Lexeme 1 is <= and is a LESS_THEN_OR_EQUAL_OP
+Lexeme 2 is 2 and is an INT_LITERAL
+Lexeme 3 is ; and is an SEMI_COLON
+---------------------------------------------------------
+Statement #2
+Lexeme 0 is ( and is a LEFT_PAREN
+Lexeme 1 is 2 and is an INT_LITERAL
+Lexeme 2 is ^ and is an EXPON_OP
+Lexeme 3 is 2 and is an INT_LITERAL
+Lexeme 4 is ) and is a RIGHT_PAREN
+Lexeme 5 is != and is a NOT_EQUALS_OP
+Lexeme 6 is 10 and is an INT_LITERAL
+Lexeme 7 is + and is an ADD_OP
+Lexeme 8 is 7 and is an INT_LITERAL
+Lexeme 9 is ; and is a SEMI_COLON
+---------------------------------------------------------
+Statement #3
+Lexeme 0 is 2 and is an INT_LITERAL
+Lexeme 1 is * and is a MULT_OP
+Lexeme 2 is 19 and is an INT_LITERAL
+Lexeme 3 is + and is an ADD_OP
+Lexeme 4 is ( and is a LEFT_PAREN
+Lexeme 5 is 5 and is an INT_LITERAL
+Lexeme 6 is / and is a RIGHT_PAREN
+Lexeme 7 is 0 and is an INT_LITERAL
+Lexeme 8 is ) and is a RIGHT_PAREN
+Lexeme 9 is ; and is a SEMI_COLON
+---------------------------------------------------------
+Statement #4
+Lexeme 0 is 1 and is an INT_LITERAL
+===> '@'
+Lexical error: not a lexeme
+Lexeme 1 is == and is an EQUALS_OP
+Lexeme 2 is = and is an ASSIGN_OP
+Lexeme 3 is 2 and is an INT_LITERAL
+Lexeme 4 is ; and is a SEMI_COLON
+---------------------------------------------------------
+Statement #5
+Lexeme 0 is 2 and is an INT_LITERAL
+Lexeme 1 is * and is a MULT_OP
+Lexeme 2 is * and is a MULT_OP
+Lexeme 3 is 9 and is an INT_LITERAL
+Lexeme 4 is ; and is a SEMI_COLON
+---------------------------------------------------------
+Statement #6
+Lexeme 0 is 3 and is an INT_LITERAL
+Lexeme 1 is * and is a MULT_OP
+===> '@'
+Lexical error: not a lexeme
