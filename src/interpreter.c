@@ -89,7 +89,7 @@ void tokenize(FILE * in_file, FILE * out_file) {
          fprintf(out_file, "Statement #%d\n", line_count);
          start = FALSE;
       }
-//      bypass_whitespace();
+      bypass_whitespace();
 
       // cycles through each character in the current input line
       while (*line != '\0') {
