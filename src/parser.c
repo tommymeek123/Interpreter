@@ -11,31 +11,31 @@
  * modified on 2020-04-13
  */
 
+#include "interpreter.h"
+#include <ctype.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
-#include <math.h>
-#include "interpreter.h"
 
 /*
- * <bexpr>       ->  <expr> ;
- * <expr>        ->  <term> <ttail>
- * <ttail>       ->  <add_sub_tok> <term> <ttail> | e
- * <term>        ->  <stmt> <stail>
- * <stail>       ->  <mult_div_tok> <stmt> <stail> | e
- * <stmt>        ->  <factor> <ftail>
- * <ftail>       ->  <compare_tok> <factor> <ftail> | e
+ * <bexpr>       ->  <expr> ; x
+ * <expr>        ->  <term> <ttail> x
+ * <ttail>       ->  <add_sub_tok> <term> <ttail> | e x
+ * <term>        ->  <stmt> <stail> x
+ * <stail>       ->  <mult_div_tok> <stmt> <stail> | e x
+ * <stmt>        ->  <factor> <ftail> x
+ * <ftail>       ->  <compare_tok> <factor> <ftail> | e x
  * <factor>      ->  <expp> ^ <factor> | <expp>
  * <expp>        ->  ( <expr> ) | <num>
- * <add_sub_tok> ->  + | -
- * <mul_div_tok> ->  * | /
- * <compare_tok> ->  < | > | <= | >= | != | ==
- * <num>         ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
+ * <add_sub_tok> ->  + | - x
+ * <mul_div_tok> ->  * | / x
+ * <compare_tok> ->  < | > | <= | >= | != | == x
+ * <num>         ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+ x
  */
 
 /* Global variables */
-extern char * line;
+extern char *line;
 
 /**
  * <bexpr>  ->  <expr> ; TODO: DESCRIPTION.
@@ -43,7 +43,7 @@ extern char * line;
  * @param token TODO: DESCRIPTION.
  * @return TODO: DESCRIPTION.
  */
-int bexpr(char * token) {
+int bexpr(char *token) {
    int subtotal = expr(token);
    get_token(token);
    if (token != ';') {
@@ -58,7 +58,7 @@ int bexpr(char * token) {
  * @param token TODO: DESCRIPTION.
  * @return TODO: DESCRIPTION.
  */
-int expr(char * token) {
+int expr(char *token) {
    int subtotal = term(token);
    if (subtotal == ERROR) {
       return subtotal;
@@ -74,7 +74,7 @@ int expr(char * token) {
  * @param subtotal TODO: DESCRIPTION.
  * @return TODO: DESCRIPTION.
  */
-int ttail(char * token, int subtotal) {
+int ttail(char *token, int subtotal) {
    int term_value;
 
    if (!strncmp(token, "+", 1)) {
@@ -101,44 +101,182 @@ int ttail(char * token, int subtotal) {
       // empty string
       return subtotal;
    }
+}
 
-   /**
+/**
+    * 
+    *  <term> ->  <stmt> <stail> TODO: DESCRIPTION.
+    * @param TODO: DESCRIPTION.
+    */
+int term(char *token) {
+   int subtotal = stmt(token);
+   if (subtotal == ERROR) {
+      return subtotal;
+   } else {
+      return stail(token, subtotal);
+   }
+}
+
+/**
+ * TODO: DESCRIPTION
+ * @param TODO: DESCRIPTION.
+ *  <stmt>        ->  <factor> <ftail>
+ */
+int stmt(char *token) {
+   int subtotal = factor(token);
+   if (subtotal == ERROR) {
+      return subtotal;
+   } else {
+      return ftail(token, subtotal);
+   }
+}
+
+/**
+ * TODO: DESCRIPTION.
+ * <expp>        -> ( <expr> ) | <num>
+ */
+int expp(char * token){
+   
+   if(!strncmp(token,"(",1)){
+      expr(token);
+   }else{
+      num(token);
+      return token;
+   }
+}
+
+/**
+    * 
+    * <stail>       ->  <mult_div_tok> <stmt> <stail> | e
+    */
+int stail(char *token, int subtotal) {
+   int stmt_value;
+
+   if (!strncmp(token, "*", 1)) {
+      mul_div_tok(token);
+      stmt_value = stmt(token);
+
+      if (stmt_value == ERROR) {
+         return stmt_value;
+      } else {
+         return stail(token, (subtotal * stmt_value));
+      }
+   } else if (!strncmp(token, "/", 1)) {
+      mul_div_tok(token);
+      stmt_value = stmt(token);
+      if (stmt_value == ERROR) {
+         return stmt_value;
+      } else {
+         return stail(token, (subtotal / stmt_value));
+      }
+   } else {
+      // empty string
+      return subtotal;
+   }
+}
+
+/**
+ * <ftail>       ->  <compare_tok> <factor> <ftail> | e
+ * 
+ */
+int ftail(char *token, int subtotal) {
+   int factor_value;
+
+   if (!strncmp(token, "<", 1)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal < factor_value));
+      }
+   } else if (!strncmp(token, "<=", 2)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal <= factor_value));
+      }
+   } else if (!strncmp(token, ">", 1)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal > factor_value));
+      }
+   } else if (!strncmp(token, ">=", 2)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal >= factor_value));
+      } 
+   }else if (!strncmp(token, "==", 2)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal == factor_value));
+      }
+   } else if (!strncmp(token, "!=", 2)) {
+      compar_tok(token);
+      factor_value = factor(token);
+
+      if (factor_value == ERROR) {
+         return factor_value;
+      } else {
+         return ftail(token, (subtotal != factor_value));
+      } 
+   } else {
+      // empty string
+      return subtotal;
+   }
+}
+/**
     * <add_sub_tok>  ->  + | - TODO: DESCRIPTION.
     *
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void add_sub_tok(char * token) {
-      get_token(token);
-   }
+void add_sub_tok(char *token) {
+   get_token(token);
+}
 
-   /**
+/**
     * <mul_div_tok>  ->  * | / TODO: DESCRIPTION.
     *
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void mul_div_tok(char * token) {
-      get_token(token);
-   }
+void mul_div_tok(char *token) {
+   get_token(token);
+}
 
-   /**
+/**
     * <compare_tok>  ->  < | > | <= | >= | != | == TODO: DESCRIPTION.
     *
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void compare_tok(char * token) {
-      get_token(token);
-   }
+void compare_tok(char *token) {
+   get_token(token);
+}
 
-   /**
+/**
     * <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+ TODO: DESCRIPTION.
     *
     * @param TODO: DESCRIPTION
     * @param TODO: DESCRIPTION
     */
-   void num(char * token) {
-      get_token(token);
-   }
+void num(char *token) {
+   get_token(token);
 }
