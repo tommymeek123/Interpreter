@@ -47,3 +47,4 @@ void compare_tok(char *);
 void expon_tok(char *);      // helper function
 int num(char *);
 int is_number(char *);       // helper function
+int power(int, int);         // helper function
