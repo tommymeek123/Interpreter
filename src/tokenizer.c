@@ -23,6 +23,7 @@ extern char * line;          // pointer to the next character to process
  * @param token_ptr A pointer to a memory location used to store a lexeme.
  */
 void get_token(char * token_ptr) {
+   bypass_whitespace();
    *token_ptr = *line;
    line++;
    switch (*token_ptr) {
@@ -59,7 +60,6 @@ void get_token(char * token_ptr) {
    }
    token_ptr++;
    *token_ptr = '\0';
-   bypass_whitespace();
 }
 
 /**
