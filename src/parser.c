@@ -45,8 +45,7 @@ extern char * line;
  */
 int bexpr(char * token) {
    int subtotal = expr(token);
-   get_token(token);
-   if (token != ';') {
+   if (strncmp(token, ";", 1)) {
       subtotal = ERROR;
    }
    return subtotal;
@@ -104,6 +103,8 @@ int stmt(char * token) {
  * @return TODO: DESCRIPTION.
  */
 int factor(char * token) {
+   int factor_value;
+
    int subtotal = expp(token);
    if (!strncmp(token, "^", 1)) {
       expon_tok(token);
@@ -113,7 +114,7 @@ int factor(char * token) {
       if (factor_value == ERROR) {
          return factor_value;
       } else {
-         return subtotal ^ factor_value);
+         return subtotal ^ factor_value;
       }
    } else {
       return subtotal;
@@ -127,11 +128,17 @@ int factor(char * token) {
  * @return TODO: DESCRIPTION.
  */
 int expp(char * token) {
+   int subtotal;
+
    if (!strncmp(token, "(", 1)) {
-      return expr(token);
+      subtotal = expr(token);
+      if (strncmp(token, ")", 1)) {
+         subtotal = ERROR;
+      }
+   } else {
+      subtotal = num(token);
    }
-   num(token); //not right
-   return token; //this either
+   return subtotal;
 }
 
 /**
@@ -214,7 +221,7 @@ int ftail(char * token, int subtotal) {
    int factor_value;
 
    if (!strncmp(token, "<", 1)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -223,7 +230,7 @@ int ftail(char * token, int subtotal) {
          return ftail(token, (subtotal < factor_value));
       }
    } else if (!strncmp(token, "<=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -232,7 +239,7 @@ int ftail(char * token, int subtotal) {
          return ftail(token, (subtotal <= factor_value));
       }
    } else if (!strncmp(token, ">", 1)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -241,7 +248,7 @@ int ftail(char * token, int subtotal) {
          return ftail(token, (subtotal > factor_value));
       }
    } else if (!strncmp(token, ">=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -250,7 +257,7 @@ int ftail(char * token, int subtotal) {
          return ftail(token, (subtotal >= factor_value));
       } 
    } else if (!strncmp(token, "==", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -259,7 +266,7 @@ int ftail(char * token, int subtotal) {
          return ftail(token, (subtotal == factor_value));
       }
    } else if (!strncmp(token, "!=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
       if (factor_value == ERROR) {
@@ -301,10 +308,31 @@ void compare_tok(char * token) {
 }
 
 /**
+ * TODO: DESCRIPTION.
+ * 
+ * @param token TODO: DESCRIPTION.
+ */
+void expon_tok(char * token) {
+   get_token(token);
+}
+
+/**
  * TODO: DESCRIPTION. <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
  * 
  * @param token TODO: DESCRIPTION.
  */
-void num(char * token) {
+int num(char * token) {
+   int subtitle = is_number(token) ? atoi(token) : ERROR;
    get_token(token);
+   return subtitle;
+}
+
+/**
+ * TODO: DESCRIPTION.
+ * 
+ * @param token TODO: DESCRIPTION.
+ */
+int is_number(char * token) {
+   printf("TOKEN: %s, ISDIGIT: %d\n", token, isdigit(*token));
+   return isdigit(*token);
 }

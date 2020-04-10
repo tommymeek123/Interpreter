@@ -28,7 +28,7 @@ int main(int argc, char * argv[]) {
    FILE ** files;
    usage(argc);
    files = open_files(argv);
-   tokenize(files[0], files[1]);
+   //tokenize(files[0], files[1]);
    parse(files[0], files[1]);
    close_files(files);
    return 0;
@@ -49,10 +49,13 @@ void parse(FILE * in_file, FILE * out_file) {
       line = input_line;
       bypass_whitespace();
       if (*line != '\0') {
-         fprintf(out_file, "%s\n", input_line);
-         int result = bexpr(token);
-         if (result == ERROR) {
+         fprintf(out_file, "%s", input_line);
+         get_token(token);
+         int total = bexpr(token);
+         if (total == ERROR) {
             fprintf(out_file, "===> '%s' expected\nSyntax Error\n\n", "THING");
+         } else {
+            fprintf(out_file, "Syntax OK\nValue is %d\n\n", total);
          }
       }
    }
@@ -92,7 +95,7 @@ void tokenize(FILE * in_file, FILE * out_file) {
 
          // prints lexeme to out_file if valid
          if (isvalid(token[0], out_file)) {
-            start = token[0] == ';' ? TRUE : FALSE;//start=TRUE at new statement
+            start = token[0] == ';'; // start = TRUE at new statement
             fprintf(out_file, "Lexeme %d is %s\n", count, token);
             count++;
          }
