@@ -135,6 +135,7 @@ int expp(char * token) {
    int subtotal;
 
    if (!strncmp(token, "(", 1)) {
+      line++;
       subtotal = expr(token);
       if (strncmp(token, ")", 1)) {
          subtotal = ERROR;
