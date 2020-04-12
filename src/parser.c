@@ -109,7 +109,9 @@ int stmt(char * token) {
  */
 int factor(char * token) {
    int subtotal = expp(token);
-   if (!strncmp(token, "^", 1)) {
+   if (subtotal == ERROR) {
+      return subtotal;
+   } else if (!strncmp(token, "^", 1)) {
       expon_tok(token);
       int factor_value = factor(token);
 
@@ -135,12 +137,12 @@ int expp(char * token) {
    int subtotal;
 
    if (!strncmp(token, "(", 1)) {
-      get_token(token);
+      open_paren_tok(token);
       subtotal = expr(token);
       if (strncmp(token, ")", 1)) {
          subtotal = ERROR;
       } else {
-         get_token(token);
+         closed_paren_tok(token);
       }
    } else {
       subtotal = num(token);
@@ -341,6 +343,26 @@ void expon_tok(char * token) {
 }
 
 /**
+ * Functions similarly to the other terminal producing functions here 
+ * even though <open_paren_tok> is not a production rule in the language.
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
+void open_paren_tok(char * token) {
+   get_token(token);
+}
+
+/**
+ * Functions similarly to the other terminal producing functions here 
+ * even though <closed_paren_tok> is not a production rule in the language.
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
+void closed_paren_tok(char * token) {
+   get_token(token);
+}
+
+/**
  * Recognizer for the <num> production rule.
  * The derivation is <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
  * 
@@ -349,8 +371,25 @@ void expon_tok(char * token) {
  */
 int num(char * token) {
    int value = is_number(token) ? atoi(token) : ERROR;
-   get_token(token);
+   if (*token == INVALID_LEXEME) {
+      lex_err();
+   } else {
+      get_token(token);
+   }
    return value;
+}
+
+/**
+ * Handles the case of an invalid lexeme. Makes sure the global line pointer 
+ * is pointing to the invalid lexeme in question.
+ */
+void lex_err() {
+   char * alpha_ptr = line;
+   while (isalpha(*alpha_ptr)) {
+      alpha_ptr++;
+   }
+   *alpha_ptr = '\0';
+   line--;
 }
 
 /**
@@ -358,7 +397,7 @@ int num(char * token) {
  * numerical digit.
  * 
  * @param token A pointer to the location where the next lexeme is stored.
- * @return 1 if the first character in token is a numeric digit. 0 otherwise.
+ * @return TRUE if the first character in token is numeric. FALSE otherwise.
  */
 int is_number(char * token) {
    return isdigit(*token);

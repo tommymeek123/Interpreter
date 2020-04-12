@@ -53,7 +53,11 @@ void parse(FILE * in_file, FILE * out_file) {
          get_token(token);
          int total = bexpr(token);
          if (total == ERROR) {
-            fprintf(out_file, "===> '%s' expected\nSyntax Error\n\n", "THING");
+            if (*token == INVALID_LEXEME) {
+               fprintf(out_file, "===> '%s'\nLexical Error: not a lexeme\n\n", line);
+            } else {
+               fprintf(out_file, "===> '%s' expected\nSyntax Error\n\n", "THING");
+            }
          } else {
             fprintf(out_file, "Syntax OK\nValue is %d\n\n", total);
          }
