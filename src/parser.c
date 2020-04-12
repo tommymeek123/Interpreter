@@ -38,26 +38,27 @@
 extern char * line;
 
 /**
-* TODO: DESCRIPTION. <bexpr>  ->  <expr> ;
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <bexpr> production rule.
+ * The derivation is <bexpr>  ->  <expr> ;
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return The total value of the evaluated expression.
+ */
 int bexpr(char * token) {
    int subtotal = expr(token);
-   get_token(token);
-   if (token != ';') {
+   if (strncmp(token, ";", 1)) {
       subtotal = ERROR;
    }
    return subtotal;
 }
 
 /**
-* TODO: DESCRIPTION. <expr>  ->  <term> <ttail>
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <expr> production rule.
+ * The derivation is <expr>  ->  <term> <ttail>
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return A running subtotal of the expression.
+ */
 int expr(char * token) {
    int subtotal = term(token);
    if (subtotal == ERROR) {
@@ -68,11 +69,12 @@ int expr(char * token) {
 }
 
 /**
-* TODO: DESCRIPTION. <term>  ->  <stmt> <stail>
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <term> production rule.
+ * The derivation is <term>  ->  <stmt> <stail>
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return A running subtotal of the expression.
+ */
 int term(char * token) {
    int subtotal = stmt(token);
    if (subtotal == ERROR) {
@@ -83,11 +85,12 @@ int term(char * token) {
 }
 
 /**
-* TODO: DESCRIPTION. <stmt>  ->  <factor> <ftail>
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <stmt> production rule.
+ * The derivation is <stmt>  ->  <factor> <ftail>
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return A running subtotal of the expression.
+ */
 int stmt(char * token) {
    int subtotal = factor(token);
    if (subtotal == ERROR) {
@@ -98,23 +101,23 @@ int stmt(char * token) {
 }
 
 /**
-* TODO: DESCRIPTION. <factor>  ->  <expp> ^ <factor> | <expp>
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <factor> production rule.
+ * The derivation is <factor>  ->  <expp> ^ <factor> | <expp>
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return A running subtotal of the expression.
+ */
 int factor(char * token) {
    int subtotal = expp(token);
-   int factor_value;
    if (!strncmp(token, "^", 1)) {
       expon_tok(token);
-      factor_value = factor(token);
+      int factor_value = factor(token);
 
-      // if term returned an error, give up otherwise call ttail
+      // if factor returned an error, give up otherwise return the power
       if (factor_value == ERROR) {
          return factor_value;
       } else {
-         return subtotal ^ factor_value;
+         return power(subtotal, factor_value);
       }
    } else {
       return subtotal;
@@ -122,26 +125,34 @@ int factor(char * token) {
 }
 
 /**
-* TODO: DESCRIPTION. <expp>  ->  ( <expr> ) | <num>
-* 
-* @param token TODO: DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <expp> production rule.
+ * The derivation is <expp>  ->  ( <expr> ) | <num>
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return A running subtotal of the expression.
+ */
 int expp(char * token) {
+   int subtotal;
+
    if (!strncmp(token, "(", 1)) {
-      return expr(token);
+      subtotal = expr(token);
+      if (strncmp(token, ")", 1)) {
+         subtotal = ERROR;
+      }
+   } else {
+      subtotal = num(token);
    }
-   num(token); //not right
-   return token; //this either
+   return subtotal;
 }
 
 /**
-* TODO: DESCRIPTION. <ttail>  ->  <add_sub_tok> <term> <ttail> | e
-* 
-* @param token TODO: DESCRIPTION.
-* @param subtotal DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <ttail> production rule.
+ * The derivation is <ttail>  ->  <add_sub_tok> <term> <ttail> | e
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @param subtotal A running subtotal of the expression.
+ * @return A running subtotal of the expression.
+ */
 int ttail(char * token, int subtotal) {
    int term_value;
 
@@ -172,12 +183,13 @@ int ttail(char * token, int subtotal) {
 }
 
 /**
-* TODO: DESCRIPTION. <stail>  ->  <mult_div_tok> <stmt> <stail> | e
-* 
-* @param token TODO: DESCRIPTION.
-* @param subtotal DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <stail> production rule.
+ * The derivation is <stail>  ->  <mult_div_tok> <stmt> <stail> | e
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @param subtotal A running subtotal of the expression.
+ * @return A running subtotal of the expression.
+ */
 int stail(char * token, int subtotal) {
    int stmt_value;
 
@@ -185,6 +197,7 @@ int stail(char * token, int subtotal) {
       mul_div_tok(token);
       stmt_value = stmt(token);
 
+      // if stmt returned an error, give up otherwise call stail
       if (stmt_value == ERROR) {
          return stmt_value;
       } else {
@@ -193,6 +206,8 @@ int stail(char * token, int subtotal) {
    } else if (!strncmp(token, "/", 1)) {
       mul_div_tok(token);
       stmt_value = stmt(token);
+
+      // if stmt returned an error, give up otherwise call stail
       if (stmt_value == ERROR) {
          return stmt_value;
       } else {
@@ -205,64 +220,71 @@ int stail(char * token, int subtotal) {
 }
 
 /**
-* TODO: DESCRIPTION. <ftail>  ->  <compare_tok> <factor> <ftail> | e
-* 
-* @param token TODO: DESCRIPTION.
-* @param subtotal DESCRIPTION.
-* @return TODO: DESCRIPTION.
-*/
+ * Recognizer for the <ftail> production rule.
+ * The derivation is <ftail>  ->  <compare_tok> <factor> <ftail> | e
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @param subtotal A running subtotal of the expression.
+ * @return A running subtotal of the expression.
+ */
 int ftail(char * token, int subtotal) {
    int factor_value;
 
    if (!strncmp(token, "<", 1)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
          return ftail(token, (subtotal < factor_value));
       }
    } else if (!strncmp(token, "<=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
          return ftail(token, (subtotal <= factor_value));
       }
    } else if (!strncmp(token, ">", 1)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
          return ftail(token, (subtotal > factor_value));
       }
    } else if (!strncmp(token, ">=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
          return ftail(token, (subtotal >= factor_value));
       } 
    } else if (!strncmp(token, "==", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
          return ftail(token, (subtotal == factor_value));
       }
    } else if (!strncmp(token, "!=", 2)) {
-      compar_tok(token);
+      compare_tok(token);
       factor_value = factor(token);
 
+      // if factor returned an error, give up otherwise call ftail
       if (factor_value == ERROR) {
          return factor_value;
       } else {
@@ -275,50 +297,78 @@ int ftail(char * token, int subtotal) {
 }
 
 /**
-* TODO: DESCRIPTION. <add_sub_tok>  ->  + | -
-* 
-* @param token TODO: DESCRIPTION.
-*/
+ * Recognizer for the <add_sub_tok> production rule.
+ * The derivation is <add_sub_tok>  ->  + | -
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
 void add_sub_tok(char * token) {
    get_token(token);
 }
 
+
 /**
-* TODO: DESCRIPTION. <mul_div_tok>  ->  * | /
-* 
-* @param token TODO: DESCRIPTION.
-*/
+ * Recognizer for the <mul_div_tok> production rule.
+ * The derivation is <mul_div_tok>  ->  * | /
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
 void mul_div_tok(char * token) {
    get_token(token);
 }
 
 /**
-* TODO: DESCRIPTION. <compare_tok>  ->  < | > | <= | >= | != | ==
-* 
-* @param token TODO: DESCRIPTION.
-*/
+ * Recognizer for the <compare_tok> production rule.
+ * The derivation is <compare_tok>  ->  < | > | <= | >= | != | ==
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
 void compare_tok(char * token) {
    get_token(token);
 }
 
 /**
-* TODO: DESCRIPTION. <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
-* 
-* @param token TODO: DESCRIPTION.
-*/
-int num(char * token) {
+ * Functions similarly to the other terminal producing functions here 
+ * even though <expon_tok> is not a production rule in the language.
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ */
+void expon_tok(char * token) {
    get_token(token);
 }
 
 /**
-*A method to convert a char into an int. 
-Logic behind the calculation above is to play with ASCII values. 
-ASCII value of character 8 is 56, ASCII value of character 0 is 48. 
-ASCII value of integer 8 is 8.
-*/
-int char_to_digit(char * character){
-   //not sure if this needs to be char or *char. I think *char because I want the 
-   //value that is storied in the token pointer. 
-   int int_of_char = *character - '0';
-   return int_of_char;
+ * Recognizer for the <num> production rule.
+ * The derivation is <num>  ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return The value of the number. A terminal in the language.
+ */
+int num(char * token) {
+   int value = is_number(token) ? atoi(token) : ERROR;
+   get_token(token);
+   return value;
+}
+
+/**
+ * Determines whether the first character of the string passed in is a 
+ * numerical digit.
+ * 
+ * @param token A pointer to the location where the next lexeme is stored.
+ * @return 1 if the first character in token is a numeric digit. 0 otherwise.
+ */
+int is_number(char * token) {
+   return isdigit(*token);
+}
+
+/**
+ * Integer exponents. Raises a base to a power.
+ * 
+ * @param base The base.
+ * @param exp The exponent.
+ * @return The result of the base raised to the power.
+ */
+int power(int base, int exp) {
+   // .5 is added to avoid rounding errors
+   return (int)(pow((double)base, (double)exp) + .5);
 }
