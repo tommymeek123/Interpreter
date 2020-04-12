@@ -5,7 +5,7 @@ Justin Clifton and Tommy Meek
 April 2020
 
 To compile, type the following command into a terminal: 
-gcc interpreter.c parser.c tokenizer.c -o interpreter
+gcc interpreter.c parser.c tokenizer.c -lm -o interpreter
 
 To run the executable you just created, type the following: 
 ./interpreter <input_filename> <output_filename>
