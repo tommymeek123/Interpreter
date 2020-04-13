@@ -45,8 +45,8 @@ int main(int argc, char * argv[]) {
    FILE ** files;
    usage(argc);
    files = open_files(argv);
-   tokenize(files[0], files[1]);
-   //parse(files[0], files[1]);
+   //tokenize(files[0], files[1]);
+   parse(files[0], files[1]);
    close_files(files);
    return 0;
 }

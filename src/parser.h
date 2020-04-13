@@ -31,5 +31,6 @@ void expon_tok(char *);           // helper function
 void open_paren_tok(char *);      // helper function
 void closed_paren_tok(char *);    // helper function
 int num(char *);
-int power(int, int);              // helper function
 void lex_err();                   // helper function
+void syn_err();                   // helper function
+int power(int, int);              // helper function

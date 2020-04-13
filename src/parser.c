@@ -397,6 +397,13 @@ void lex_err() {
 }
 
 /**
+ * Handles the case of a syntax error. TODO: more
+ */
+void syn_err() {
+
+}
+
+/**
  * Integer exponents. Raises a base to a power.
  * 
  * @param base The base.
