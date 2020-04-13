@@ -16,9 +16,7 @@
 
 
 /* Constants */
-#define LSIZE 100
-#define TSIZE 20
-#define SYN_ERR "===> '%s' expected\nSyntax Error\n\n"
+#define SYN_ERR "===> %s expected\nSyntax Error\n\n"
 #define LEX_ERR "===> '%s'\nLexical Error: not a lexeme\n\n"
 #define DASHES "---------------------------------------------------------\n"
 
@@ -72,10 +70,8 @@ void parse(FILE * in_file, FILE * out_file) {
          if (total == ERROR) {
             if (*token == INVALID_LEXEME) {
                fprintf(out_file, LEX_ERR, line);
-            } else if (*token == EOL_ERROR) {
-               fprintf(out_file, SYN_ERR, ";");
             } else {
-               fprintf(out_file, SYN_ERR, ")");
+               fprintf(out_file, SYN_ERR, token);
             }
          } else {
             fprintf(out_file, "Syntax OK\nValue is %d\n\n", total);

@@ -49,8 +49,11 @@ extern char * line;
  */
 int bexpr(char * token) {
    int subtotal = expr(token);
-   if (strncmp(token, ";", 1)) {
+   if (*token != ';') {
       subtotal = ERROR;
+   }
+   if (*token == EOL_ERROR) {
+      syn_err(&subtotal, "';'", token);
    }
    return subtotal;
 }
@@ -142,14 +145,22 @@ int expp(char * token) {
    if (!strncmp(token, "(", 1)) {
       open_paren_tok(token);
       subtotal = expr(token);
+      if (subtotal == ERROR) {
+         return subtotal;
+      }
       if (strncmp(token, ")", 1)) {
-         subtotal = ERROR;
-         token = ")";
+         syn_err(&subtotal, "')'", token);
       } else {
          closed_paren_tok(token);
       }
-   } else {
+   } else if (isdigit(*token)) {
       subtotal = num(token);
+   } else {
+      if (*token == INVALID_LEXEME) {
+         lex_err(&subtotal);
+      } else {
+         syn_err(&subtotal, "'(' or int literal", token);
+      }
    }
    return subtotal;
 }
@@ -315,7 +326,6 @@ void add_sub_tok(char * token) {
    get_token(token);
 }
 
-
 /**
  * Recognizer for the <mul_div_tok> production rule.
  * The derivation is <mul_div_tok>  ->  * | /
@@ -374,20 +384,19 @@ void closed_paren_tok(char * token) {
  * @return The value of the number. A terminal in the language.
  */
 int num(char * token) {
-   int value = isdigit(*token) ? atoi(token) : ERROR;
-   if (*token == INVALID_LEXEME) {
-      lex_err();
-   } else {
-      get_token(token);
-   }
+   int value = atoi(token);
+   get_token(token);
    return value;
 }
 
 /**
  * Handles the case of an invalid lexeme. Makes sure the global line pointer 
  * is pointing to the invalid lexeme in question.
+ * 
+ * @param subtotal A running subtotal of what the expression evaluates to.
  */
-void lex_err() {
+void lex_err(int * subtotal) {
+   *subtotal = ERROR;
    char * alpha_ptr = line;
    while (isalpha(*alpha_ptr)) {
       alpha_ptr++;
@@ -398,9 +407,14 @@ void lex_err() {
 
 /**
  * Handles the case of a syntax error. TODO: more
+ * 
+ * @param subtotal A running subtotal of what the expression evaluates to.
+ * @param err The expected string.
+ * @param token A pointer to the location where the next lexeme is stored.
  */
-void syn_err() {
-
+void syn_err(int * subtotal, char * err, char * token) {
+   *subtotal = ERROR;
+   strncpy(token, err, TSIZE);
 }
 
 /**

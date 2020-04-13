@@ -1,3 +1,7 @@
+2 + ();
+===> '(' or int literal expected
+Syntax Error
+
 2 - @ < 2;
 ===> '@'
 Lexical Error: not a lexeme
@@ -74,39 +78,43 @@ Syntax Error
 Syntax OK
 Value is 9
 
+((9 * 2) < (2 + 1));
+Syntax OK
+Value is 0
+
 42 + 103;
 Syntax OK
 Value is 145
 
-+ 6 + 9;
-===> '(' or <num> expected
-Syntax Error
-
-7 == 10 ^ ;
-===> '(' or <num> expected
-Syntax Error
-
-2 + < 3;
-===> '(' or <num> expected
-Syntax Error
-
 5 * 7   3 - 2;
-===> ';' expected
+
 Syntax Error
 
 3 + 4);
-===> '(' expected
+
+Syntax Error
+
++ 6 + 9;
+===> '(' or int literal expected
+Syntax Error
+
+7 == 10 ^ ;
+===> '(' or int literal expected
+Syntax Error
+
+2 + < 3;
+===> '(' or int literal expected
 Syntax Error
 
   ;
-===> '(' or <num> expected
+===> '(' or int literal expected
 Syntax Error
 
   +
-===> '(' or <num> expected
+===> '(' or int literal expected
 Syntax Error
 
-2 + ();
-===> '(' or <num> expected
+);
+===> '(' or int literal expected
 Syntax Error
 
