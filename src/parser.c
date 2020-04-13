@@ -16,7 +16,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "interpreter.h"
+#include "parser.h"
+#include "tokenizer.h"
+
 
 /*
  * <bexpr>       ->  <expr> ;
@@ -33,6 +35,7 @@
  * <compare_tok> ->  < | > | <= | >= | != | ==
  * <num>         ->  {0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9}+
  */
+
 
 /* Global variables */
 extern char * line;

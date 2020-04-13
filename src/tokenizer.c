@@ -6,11 +6,12 @@
  * created on 2020-03-20
  */
 
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "interpreter.h"
+#include "tokenizer.h"
 
 
 /* Global variables */
@@ -87,7 +88,7 @@ int isvalid(char token, FILE * out_file) {
    int result = TRUE;
    if (token == INVALID_LEXEME) {
       line--;
-      fprintf(out_file, "===> '%c'\n%s", *line,"Lexical error: not a lexeme\n");
+      fprintf(out_file, LEX_ERR_CH, *line);
       line++;
       result = FALSE;
    }

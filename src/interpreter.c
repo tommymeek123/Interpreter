@@ -11,7 +11,24 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "interpreter.h"
+#include "parser.h"
+#include "tokenizer.h"
+
+
+/* Constants */
+#define LSIZE 100
+#define TSIZE 20
+#define SYN_ERR "===> '%s' expected\nSyntax Error\n\n"
+#define LEX_ERR "===> '%s'\nLexical Error: not a lexeme\n\n"
+#define DASHES "---------------------------------------------------------\n"
+
+
+/* Function prototypes */
+void usage(int);
+FILE ** open_files(char **);
+void close_files(FILE **);
+void tokenize(FILE *, FILE *);
+void parse(FILE *, FILE *);
 
 
 /* Global variables */
@@ -28,8 +45,8 @@ int main(int argc, char * argv[]) {
    FILE ** files;
    usage(argc);
    files = open_files(argv);
-   //tokenize(files[0], files[1]);
-   parse(files[0], files[1]);
+   tokenize(files[0], files[1]);
+   //parse(files[0], files[1]);
    close_files(files);
    return 0;
 }
@@ -54,9 +71,9 @@ void parse(FILE * in_file, FILE * out_file) {
          int total = bexpr(token);
          if (total == ERROR) {
             if (*token == INVALID_LEXEME) {
-               fprintf(out_file, "===> '%s'\nLexical Error: not a lexeme\n\n", line); // TODO: fix! past 80 characters
+               fprintf(out_file, LEX_ERR, line);
             } else if (*token == EOL_ERROR) {
-               fprintf(out_file, "===> ';' expected\nSyntax Error\n\n");
+               fprintf(out_file, SYN_ERR, token);
             } else {
                fprintf(out_file, "===> ')' expected\nSyntax Error\n\n");
             }
