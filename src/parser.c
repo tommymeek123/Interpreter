@@ -141,6 +141,7 @@ int expp(char * token) {
       subtotal = expr(token);
       if (strncmp(token, ")", 1)) {
          subtotal = ERROR;
+         token = ")";
       } else {
          closed_paren_tok(token);
       }
@@ -370,7 +371,7 @@ void closed_paren_tok(char * token) {
  * @return The value of the number. A terminal in the language.
  */
 int num(char * token) {
-   int value = is_number(token) ? atoi(token) : ERROR;
+   int value = isdigit(*token) ? atoi(token) : ERROR;
    if (*token == INVALID_LEXEME) {
       lex_err();
    } else {
@@ -390,17 +391,6 @@ void lex_err() {
    }
    *alpha_ptr = '\0';
    line--;
-}
-
-/**
- * Determines whether the first character of the string passed in is a 
- * numerical digit.
- * 
- * @param token A pointer to the location where the next lexeme is stored.
- * @return TRUE if the first character in token is numeric. FALSE otherwise.
- */
-int is_number(char * token) {
-   return isdigit(*token);
 }
 
 /**

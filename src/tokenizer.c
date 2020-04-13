@@ -54,6 +54,9 @@ void get_token(char * token_ptr) {
             line++;
          }
          break;
+      case '\0':
+         *token_ptr = EOL_ERROR;
+         break;
       default:
          *token_ptr = INVALID_LEXEME;
          break;
@@ -90,30 +93,3 @@ int isvalid(char token, FILE * out_file) {
    }
    return result;
 }
-
-// /**
-//  * This function checks if the next character in line is an equals symbol. 
-//  * If it is, it is appended to the token array. If not, nothing happens.
-//  *
-//  * @param token_ptr A pointer to a memory location used to store a lexeme.
-//  */
-// void check_for_equals(char ** token_ptr) {
-//    if (*line == '=') {
-//       *token_ptr++;
-//       line++;
-//       **token_ptr = '=';
-//    }
-// }
-
-// /**
-//  * Appends digits to the lexeme until a non-numeric character is found.
-//  *
-//  * @param token_ptr A pointer to a memory location used to store a lexeme.
-//  */
-// void append_digits(char ** token_ptr) {
-//    while (isdigit(*line)) {
-//       *token_ptr++;
-//       **token_ptr = *line;
-//       line++;
-//    }
-// }

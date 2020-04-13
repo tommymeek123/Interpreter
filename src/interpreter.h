@@ -15,14 +15,13 @@
 #define DASHES "---------------------------------------------------------\n"
 #define INVALID_LEXEME '@'
 #define ERROR -999999
+#define EOL_ERROR '~'
 
 /* Function prototypes */
 // tokenizer.c
 void get_token(char *);
 void bypass_whitespace();
 int isvalid(char, FILE *);
-// void check_for_equals(char **);   // Not used
-// void append_digits(char **);      // Not used
 
 // interpreter.c
 void usage(int);
@@ -48,6 +47,5 @@ void expon_tok(char *);           // helper function
 void open_paren_tok(char *);      // helper function
 void closed_paren_tok(char *);    // helper function
 int num(char *);
-int is_number(char *);            // helper function
 int power(int, int);              // helper function
 void lex_err();                   // helper function

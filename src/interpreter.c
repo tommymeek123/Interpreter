@@ -54,9 +54,11 @@ void parse(FILE * in_file, FILE * out_file) {
          int total = bexpr(token);
          if (total == ERROR) {
             if (*token == INVALID_LEXEME) {
-               fprintf(out_file, "===> '%s'\nLexical Error: not a lexeme\n\n", line);
+               fprintf(out_file, "===> '%s'\nLexical Error: not a lexeme\n\n", line); // TODO: fix! past 80 characters
+            } else if (*token == EOL_ERROR) {
+               fprintf(out_file, "===> ';' expected\nSyntax Error\n\n");
             } else {
-               fprintf(out_file, "===> '%s' expected\nSyntax Error\n\n", "THING");
+               fprintf(out_file, "===> ')' expected\nSyntax Error\n\n");
             }
          } else {
             fprintf(out_file, "Syntax OK\nValue is %d\n\n", total);
