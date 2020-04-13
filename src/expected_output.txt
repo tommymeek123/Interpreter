@@ -95,7 +95,7 @@ Syntax Error
 Syntax Error
 
 3 + 4);
-===> ';' expected
+===> '(' expected
 Syntax Error
 
   ;

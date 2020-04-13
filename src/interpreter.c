@@ -73,9 +73,9 @@ void parse(FILE * in_file, FILE * out_file) {
             if (*token == INVALID_LEXEME) {
                fprintf(out_file, LEX_ERR, line);
             } else if (*token == EOL_ERROR) {
-               fprintf(out_file, SYN_ERR, token);
+               fprintf(out_file, SYN_ERR, ";");
             } else {
-               fprintf(out_file, "===> ')' expected\nSyntax Error\n\n");
+               fprintf(out_file, SYN_ERR, ")");
             }
          } else {
             fprintf(out_file, "Syntax OK\nValue is %d\n\n", total);
